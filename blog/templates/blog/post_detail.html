@@ -33,7 +33,7 @@
   <br>
       {% if user.is_authenticated or comment.approved_comment %}
 
-              <p><strong>On {{ comment.created_date|safe }}, {{ comment.author }} commented below -</strong> </p>
+              <p><strong>On {{ comment.created_date|date:"d-m-Y"|safe }}, {{ comment.author }} commented -</strong> </p>
               {% if not comment.approved_comment %}
                   <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span class="fas fa-trash"></span></a>
                   <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span class="fas fa-thumbs-up"></span></a>

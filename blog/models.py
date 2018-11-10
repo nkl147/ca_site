@@ -3,16 +3,27 @@ from django.utils import timezone
 from django.urls import reverse
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.utils.text import slugify
+from datetime import datetime
 
 # Create your models here.
 class Post(models.Model):
     author = models.ForeignKey('auth.User',on_delete=models.CASCADE,)
     title = models.CharField(max_length=200)
+    # New for Slug URL
+    slug = models.SlugField(allow_unicode=True,unique = True,null=True)
     # text = models.TextField()
     # text = RichTextField()
     text = RichTextUploadingField()
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
+
+    # New for Slug URL
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        # self.description_html = misaka.html(self.description)
+        super().save(*args, **kwargs)
 
     def publish(self):
         self.published_date = timezone.now()
@@ -22,7 +33,7 @@ class Post(models.Model):
         return self.comments.filter(approved_comment=True)
 
     def get_absolute_url(self):
-        return reverse("post_detail",kwargs={'pk':self.pk})
+        return reverse("post_detail",kwargs={'slug':self.slug})
 
 
     def __str__(self):
