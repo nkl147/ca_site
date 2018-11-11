@@ -8,6 +8,7 @@ from django.views.generic import (TemplateView,ListView,
                                   UpdateView,DeleteView)
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.text import slugify
 
 # Create your views here.
 class AboutView(TemplateView):
@@ -62,7 +63,7 @@ class PostDeleteView(LoginRequiredMixin,DeleteView):
 def post_publish(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.publish()
-    return redirect('post_detail', pk=pk)
+    return redirect('post_detail', slug=post.slug)
 
 # @login_required
 def add_comment_to_post(request, pk):
